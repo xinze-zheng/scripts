@@ -32,20 +32,19 @@ mkdir -p ~/skyrl
 mkdir -p ~/uccl
 sudo apt update && sudo apt-get install -y build-essential libnuma-dev libibverbs-dev 
 
-pushd ~/skyrl
+cd ~/skyrl
 git clone https://github.com/NovaSky-AI/SkyRL.git
-pushd SkyRL
+cd SkyRL
 uv venv
 source .venv/bin/activate
 uv sync --active --extra fsdp
 deactivate
-popd
 
-pushd ~/uccl/ep
+cd ~/uccl
+git clone https://github.com/uccl-project/uccl.git
+cd uccl
 ./install_deps.sh
 python setup.py install
-popd
-popd
 
 git config --global user.email wxzheng@berkeley.edu
 git config --global user.name xinze-zheng
