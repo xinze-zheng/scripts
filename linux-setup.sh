@@ -1,3 +1,4 @@
+
 # Setup scripts for new linux environment
 
 # Install gh 
@@ -21,3 +22,30 @@ wget -q https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O
 bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
 rm ~/miniconda3/miniconda.sh
 ~/miniconda3/bin/conda init bash
+
+# Install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+
+# SkyRL & UCCL
+mkdir -p ~/skyrl
+mkdir -p ~/uccl
+sudo apt update && sudo apt-get install -y build-essential libnuma-dev libibverbs-dev 
+
+pushd ~/skyrl
+git clone https://github.com/NovaSky-AI/SkyRL.git
+pushd SkyRL
+uv venv
+source .venv/bin/activate
+uv sync --active --extra fsdp
+deactivate
+popd
+
+pushd ~/uccl/ep
+./install_deps.sh
+python setup.py install
+popd
+popd
+
+git config --global user.email wxzheng@berkeley.edu
+git config --global user.name xinze-zheng
