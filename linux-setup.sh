@@ -26,6 +26,18 @@ rm ~/miniconda3/miniconda.sh
 # Install uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
+# Symlink large caches to local storage (if available)
+if [ -d /mnt/local_storage ]; then
+  mkdir -p /mnt/local_storage/cache
+  for dir in huggingface uv; do
+    if [ -d ~/.cache/$dir ] && [ ! -L ~/.cache/$dir ]; then
+      mv ~/.cache/$dir /mnt/local_storage/cache/$dir
+    fi
+    mkdir -p /mnt/local_storage/cache/$dir
+    ln -sfn /mnt/local_storage/cache/$dir ~/.cache/$dir
+  done
+fi
+
 
 # SkyRL & UCCL
 mkdir -p ~/skyrl
@@ -35,7 +47,7 @@ sudo apt update && sudo apt-get install -y build-essential libnuma-dev libibverb
 cd ~/skyrl
 git clone https://github.com/NovaSky-AI/SkyRL.git
 cd SkyRL
-uv venv
+uv venv --python 3.12
 source .venv/bin/activate
 uv sync --active --extra fsdp
 deactivate
